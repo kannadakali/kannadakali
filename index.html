@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <title>Kannada Story Quiz</title>
+</head>
+<body>
+    <header>
+        <h1>ಕಥೆಯನ್ನು ಓದಿ ಮತ್ತು ಪ್ರಶ್ನೆಗಳನ್ನು ಉತ್ತರಿಸಿ</h1>
+    </header>
+    <main>
+        <section class="story">
+            <p id="storyContent">Loading story...</p>
+        </section>
+
+        <section class="quiz">
+            <h2>ಕೆಳಗಿನ ಪ್ರಶ್ನೆಗಳನ್ನು ಉತ್ತರಿಸಿ</h2>
+            <div id="quizContainer"></div>
+        
+            <form id="quizForm" action="/send-email" method="POST">
+                <label for="userName" class="q">ನಿಮ್ಮ ಹೆಸರು:</label>
+                <input type="text" id="userName" name="userName" required>
+                
+                <div class="submit-button-container">
+                    <button type="submit" class="submit-quiz">Submit</button>
+                </div>
+            </form>
+        </section>
+        
+
+
+        <div class="quiz-result"></div>
+    </main>
+    <footer>
+        <p>&copy; 2023</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
