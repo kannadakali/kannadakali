@@ -1,7 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const nodemailer = require('nodemailer');
-// Assuming you added multer for handling file uploads
 const multer = require('multer');
 const upload = multer({ dest: 'uploads/' });
 
@@ -11,41 +10,44 @@ const port = process.env.PORT || 3000;
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-// Define an API endpoint for sending emails
 app.post('/send-email', upload.single('audioData'), (req, res) => {
-  // Get email data from the request body
-  const { userName, score /* Add other form fields here */ } = req.body; // Include the 'score' field
+    const { userName } = req.body;
+    const audioFilePath = req.file.path; // The path to the uploaded audio file
 
-  // Create a Nodemailer transporter
-  const transporter = nodemailer.createTransport({
-    service: 'Gmail', // Use your email service provider
-    auth: {
-      user: 'pranav.gunhal@gmail.com', // Your email address
-      pass: 'cewmtzenejkimgik', // Your email password
-    },
-  });
+    const transporter = nodemailer.createTransport({
+        service: 'Gmail',
+        auth: {
+            user: 'pranav.gunhal@gmail.com',
+            pass: 'cewmtzenejkimgik',
+        },
+    });
 
-  // Email message options
-  const mailOptions = {
-    from: 'pranav.gunhal@gmail.com', // Sender's email address
-    to: 'pranav.gunhal@gmail.com', // Recipient's email address
-    subject: 'Quiz Submission', // Subject of the email
-    text: `User: ${userName} submitted the quiz with a score of ${score}.`, // Include the score in the email body
-  };
+    const mailOptions = {
+        from: 'pranav.gunhal@gmail.com',
+        to: 'pranav.gunhal@gmail.com',
+        subject: 'Quiz Submission',
+        text: `User: ${userName} submitted the quiz.`,
+        attachments: [
+            {   
+                filename: req.file.originalname,
+                path: audioFilePath
+            }
+        ]
+    };
 
-  // Send the email
-  transporter.sendMail(mailOptions, (error, info) => {
-    if (error) {
-      console.error(error);
-      res.status(500).json({ error: 'Email could not be sent.' });
-    } else {
-      console.log('Email sent: ' + info.response);
-      res.json({ message: 'Email sent successfully.' });
-    }
-  });
+    transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+            console.error(error);
+            res.status(500).json({ error: 'Email could not be sent.' });
+        } else {
+            console.log('Email sent: ' + info.response);
+            res.json({ message: 'Email sent successfully.' });
+        }
+    });
 });
+
 app.use(express.static(__dirname));
 
 app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
+    console.log(`Server is running on port ${port}`);
 });

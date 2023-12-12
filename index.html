@@ -3,46 +3,38 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Quiz</title>
     <link rel="stylesheet" href="styles.css">
-    <title>Kannada Story Quiz</title>
 </head>
 <body>
     <header>
-        <h1>ಕಥೆಯನ್ನು ಓದಿ ಮತ್ತು ಪ್ರಶ್ನೆಗಳನ್ನು ಉತ್ತರಿಸಿ</h1>
+        <h1>Welcome to the Interactive Quiz</h1>
     </header>
     <main>
-        <section class="story">
-            <p id="storyContent">Loading story...</p>
+        <section id="storySection">
+            <h2>Story</h2>
+            <p id="storyContent"></p>
         </section>
 
-        <section class="quiz">
-            <h2>ಕೆಳಗಿನ ಪ್ರಶ್ನೆಗಳನ್ನು ಉತ್ತರಿಸಿ</h2>
-            <div id="quizContainer"></div>
-        
-            <form id="quizForm" action="/send-email" method="POST">
-                <label for="userName" class="q">ನಿಮ್ಮ ಹೆಸರು:</label>
+        <section id="quizSection">
+            <h2>Quiz</h2>
+            <form id="quizForm">
+                <div id="quizContainer"></div>
+                <label for="userName">Your Name:</label>
                 <input type="text" id="userName" name="userName" required>
-                
-                <div class="submit-button-container">
-                    <button type="submit" class="submit-quiz">Submit</button>
-                </div>
+
+                <label for="audioRecord">Record your answer:</label>
+                <button type="button" id="recordButton">Start Recording</button>
+                <audio id="audioPlayback" controls hidden></audio>
+                <input type="hidden" id="audioData" name="audioData">
+
+                <button type="submit">Submit</button>
             </form>
+            <div id="quizResult"></div>
         </section>
-
-        <!-- <section class="audio-recording">
-            <h2>Record your answer</h2>
-            <button id="recordButton">Start Recording</button>
-            <audio id="audioPlayback" controls hidden></audio>
-            <input type="hidden" id="audioData" name="audioData">
-        </section> -->
-        
-        
-
-
-        <div class="quiz-result"></div>
     </main>
     <footer>
-        <p>&copy; 2023</p>
+        <p>&copy; 2023 Interactive Quiz</p>
     </footer>
 
     <script src="script.js"></script>
