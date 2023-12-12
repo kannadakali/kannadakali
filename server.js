@@ -9,8 +9,12 @@ const port = process.env.PORT || 3000;
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
+
+const multer = require('multer');
+const upload = multer({ dest: 'uploads/' });
+
 // Define an API endpoint for sending emails
-app.post('/send-email', (req, res) => {
+app.post('/send-email', upload.single('audioData'), (req, res) => {
   // Get email data from the request body
   const { userName, score /* Add other form fields here */ } = req.body; // Include the 'score' field
 

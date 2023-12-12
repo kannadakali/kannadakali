@@ -125,3 +125,33 @@ function parseParagraph(paragraph) {
   }
 }
 
+
+let mediaRecorder;
+let audioChunks = [];
+
+document.getElementById('recordButton').addEventListener('click', function() {
+    if (!mediaRecorder || mediaRecorder.state === 'inactive') {
+        navigator.mediaDevices.getUserMedia({ audio: true })
+        .then(stream => {
+            mediaRecorder = new MediaRecorder(stream);
+            mediaRecorder.ondataavailable = e => {
+                audioChunks.push(e.data);
+            };
+            mediaRecorder.onstop = e => {
+                const audioBlob = new Blob(audioChunks, { type: 'audio/mp3' });
+                const audioUrl = URL.createObjectURL(audioBlob);
+                document.getElementById('audioPlayback').src = audioUrl;
+                document.getElementById('audioData').value = audioUrl;
+                document.getElementById('audioPlayback').hidden = false;
+                audioChunks = [];
+            };
+            mediaRecorder.start();
+            this.textContent = 'Stop Recording';
+        });
+    } else {
+        mediaRecorder.stop();
+        this.textContent = 'Start Recording';
+    }
+});
+
+
