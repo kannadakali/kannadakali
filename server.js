@@ -1,17 +1,15 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const nodemailer = require('nodemailer');
+// Assuming you added multer for handling file uploads
+const multer = require('multer');
+const upload = multer({ dest: 'uploads/' });
 
 const app = express();
 const port = process.env.PORT || 3000;
 
-// Middleware for parsing JSON and form data
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-
-
-const multer = require('multer');
-const upload = multer({ dest: 'uploads/' });
 
 // Define an API endpoint for sending emails
 app.post('/send-email', upload.single('audioData'), (req, res) => {
@@ -46,11 +44,8 @@ app.post('/send-email', upload.single('audioData'), (req, res) => {
     }
   });
 });
-
-// Serve your static files (HTML, CSS, JavaScript)
 app.use(express.static(__dirname));
 
-// Start the server
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });

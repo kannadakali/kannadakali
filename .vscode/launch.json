@@ -5,11 +5,17 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "type": "msedge",
+            "type": "chrome",
             "request": "launch",
-            "name": "Launch Edge against localhost",
-            "url": "http://localhost:8080",
+            "name": "Open testing this.html",
+            "file": "C:\\Users\\pgunh\\GitHub\\kannadakali\\index.html"
+        },
+        {
+            "name": "Launch Chrome",
+            "request": "launch",
+            "type": "chrome",
+            "url": "https://localhost:3000",
             "webRoot": "${workspaceFolder}"
-        }
+        },
     ]
 }

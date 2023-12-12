@@ -1,74 +1,95 @@
 document.addEventListener("DOMContentLoaded", function () {
-  // Fetch the story content from the file
+  // Fetch the story content
   fetch('story.txt')
-    .then(response => response.text())
-    .then(content => {
-      const storyContent = document.getElementById('storyContent');
-      const paragraphs = content.split('\n');
-      const parsedParagraphs = paragraphs.map(parseParagraph);
-     storyContent.innerHTML = parsedParagraphs.join('');
-    });
-    
+      .then(response => response.text())
+      .then(content => {
+          const storyContent = document.getElementById('storyContent');
+          const paragraphs = content.split('\n');
+          const parsedParagraphs = paragraphs.map(parseParagraph);
+          storyContent.innerHTML = parsedParagraphs.join('');
+      });
 
-  // Fetch quiz questions from the file
+  // Fetch quiz questions
   fetch('quiz_questions.txt')
-    .then(response => response.text())
-    .then(questionsContent => {
-      const quizContainer = document.getElementById('quizContainer');
-      const questions = questionsContent.split('\n');
-      const parsedQuestions = questions.map(parseQuestion);
-      quizContainer.innerHTML = parsedQuestions.join('');
-    });
+      .then(response => response.text())
+      .then(questionsContent => {
+          const quizContainer = document.getElementById('quizContainer');
+          const questions = questionsContent.split('\n');
+          const parsedQuestions = questions.map(parseQuestion);
+          quizContainer.innerHTML = parsedQuestions.join('');
+      });
 
-  // Quiz functionality
+  // Audio recording functionality
+  let mediaRecorder;
+  let audioChunks = [];
+
+  document.getElementById('recordButton').addEventListener('click', function () {
+      if (!mediaRecorder || mediaRecorder.state === 'inactive') {
+          navigator.mediaDevices.getUserMedia({ audio: true })
+              .then(stream => {
+                  mediaRecorder = new MediaRecorder(stream);
+                  mediaRecorder.ondataavailable = e => {
+                      audioChunks.push(e.data);
+                  };
+                  mediaRecorder.onstop = e => {
+                      const audioBlob = new Blob(audioChunks, { type: 'audio/mp3' });
+                      const audioUrl = URL.createObjectURL(audioBlob);
+                      document.getElementById('audioPlayback').src = audioUrl;
+                      document.getElementById('audioData').value = audioUrl;
+                      document.getElementById('audioPlayback').hidden = false;
+                      audioChunks = [];
+                  };
+                  mediaRecorder.start();
+                  this.textContent = 'Stop Recording';
+              });
+      } else {
+          mediaRecorder.stop();
+          this.textContent = 'Start Recording';
+      }
+  });
+
+  // Quiz form submission functionality
   const quizForm = document.getElementById("quizForm");
   quizForm.addEventListener("submit", function (e) {
-    e.preventDefault(); // Prevent the default form submission
+      e.preventDefault(); // Prevent the default form submission
 
-    const results = document.querySelector(".quiz-result");
-    const questions = document.querySelectorAll(".quiz-question");
+      const results = document.querySelector(".quiz-result");
+      const questions = document.querySelectorAll(".quiz-question");
 
-    let correctAnswers = 0;
-
-    questions.forEach((question) => {
-      const selectedOption = question.querySelector(
-        `input[type="radio"]:checked`
-      );
-
-      if (selectedOption) {
-        if (selectedOption.dataset.correct === "true") {
-          correctAnswers++;
-        }
-      }
-    });
-
-    const totalQuestions = questions.length;
-    const resultText = `You answered ${correctAnswers} out of ${totalQuestions} questions correctly.`;
-    results.textContent = resultText;
-
-    // Get the user's name from the form
-    const userName = document.getElementById("userName").value;
-
-    // Send the quiz score and user name to the server via an API (you'll need to set up the server route)
-    fetch("/send-email", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        userName,
-        score: correctAnswers, // Send the quiz score to the server
-      }),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        console.log(data); // Log the response from the server
-      })
-      .catch((error) => {
-        console.error(error);
+      let correctAnswers = 0;
+      questions.forEach((question) => {
+          const selectedOption = question.querySelector(`input[type="radio"]:checked`);
+          if (selectedOption && selectedOption.dataset.correct === "true") {
+              correctAnswers++;
+          }
       });
+
+      const totalQuestions = questions.length;
+      const resultText = `You answered ${correctAnswers} out of ${totalQuestions} questions correctly.`;
+      results.textContent = resultText;
+
+      const userName = document.getElementById("userName").value;
+
+      // Add code to handle the form data, including the audio
+      // You will need to adjust this to match your server-side logic
+      // This is a simple example to illustrate the process
+      fetch("/send-email", {
+          method: "POST",
+          headers: {
+              "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+              userName,
+              score: correctAnswers,
+              // You may need to handle the audio data differently depending on your server setup
+          }),
+      })
+          .then(response => response.json())
+          .then(data => console.log(data))
+          .catch(error => console.error(error));
   });
 });
+
 
 function parseQuestion(question) {
   const options = question.split('|');
@@ -154,4 +175,4 @@ document.getElementById('recordButton').addEventListener('click', function() {
     }
 });
 
-
+// hei
