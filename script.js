@@ -53,8 +53,14 @@ quizForm.addEventListener('submit', function (e) {
     statusMessage.style.color = 'blue';
 
     const userName = document.getElementById('userName').value;
+    statusMessage.textContent = 'usernName data...';
+
     const audioBlob = audioData.files[0];
+    statusMessage.textContent = 'audioBlob data...';
+
     const reader = new FileReader();
+    statusMessage.textContent = 'reader data...';
+
 
     // Set up the onloadend event handler
     reader.onloadend = function() {
@@ -64,9 +70,11 @@ quizForm.addEventListener('submit', function (e) {
 
     // Start reading the audio data
     reader.readAsDataURL(audioBlob);
-    statusMessage.textContent = 'prepared data...';
+    statusMessage.textContent = 'read data...';
 
     sendAudioData(reader.result, userName);
+    statusMessage.textContent = 'sent data...';
+
 });
 
 function sendAudioData(base64Audio, userName) {
