@@ -64,7 +64,7 @@ document.addEventListener("DOMContentLoaded", function () {
     statusMessage.textContent = 'User name received...';
 
     if (!audioData.files || audioData.files.length === 0) {
-        statusMessage.textContent = 'Error: No audio data found.';
+        statusMessage.textContent = ': No audio data found.';
         return;
     }
     const audioBlob = audioData.files[0];
