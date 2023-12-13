@@ -85,25 +85,38 @@ function sendAudioData(base64Audio, userName) {
     statusMessage.style.color = 'blue';
 
     fetch('https://us-central1-kannada-kali-site.cloudfunctions.net/sendEmail', {
-        method: 'POST',
-        body: JSON.stringify({ userName, audioData: base64AudioMessage }),
-        headers: {
-            'Content-Type': 'application/json'
-        }
-    })
-    .then(response => response.json())
-    .then(data => {
-        // Display success message
-        statusMessage.textContent = 'Submission successful!';
-        statusMessage.style.color = 'green';
-        alert(data.message);
-    })
-    .catch(error => {
-        // Display error message
-        console.error('Error:', error);
-        statusMessage.textContent = 'Error sending submission.';
-        statusMessage.style.color = 'red';
-    });
+      method: 'POST',
+      body: JSON.stringify({ userName, audioData: base64AudioMessage }),
+      headers: {
+          'Content-Type': 'application/json'
+      }
+  })
+  .then(response => {
+      if (!response.ok) {
+          throw new Error('Network response was not ok');
+      }
+      return response.text(); // Use text() instead of json() for more flexible handling
+  })
+  .then(data => {
+      try {
+          const jsonData = JSON.parse(data); // Try to parse the text response as JSON
+          statusMessage.textContent = 'Submission successful!';
+          statusMessage.style.color = 'green';
+          alert(jsonData.message);
+      } catch (error) {
+          // Handle the case where the response is not JSON
+          console.error('Error:', error);
+          statusMessage.textContent = 'Error parsing response.';
+          statusMessage.style.color = 'red';
+          alert(data); // Alert the raw data
+      }
+  })
+  .catch(error => {
+      console.error('Error:', error);
+      statusMessage.textContent = 'Error sending submission.';
+      statusMessage.style.color = 'red';
+  });
+  
 }
 
 
