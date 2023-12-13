@@ -18,6 +18,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const audioData = document.getElementById('audioData');
 
     recordButton.addEventListener('click', function () {
+      statusMessage.textContent = 'Attempting to record...';
         if (!mediaRecorder || mediaRecorder.state === 'inactive') {
             navigator.mediaDevices.getUserMedia({ audio: true })
                 .then(stream => {
@@ -43,38 +44,31 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 // Form submission logic
 const quizForm = document.getElementById('quizForm');
-const statusMessage = document.getElementById('statusMessage'); // Status message element
+const statusMessage = document.getElementById('statusMessage');
 
 quizForm.addEventListener('submit', function (e) {
     e.preventDefault();
-
-    // Display a starting message
-    statusMessage.textContent = 'Preparing data...';
-    statusMessage.style.color = 'blue';
+    statusMessage.textContent = 'Form submission initiated...';
 
     const userName = document.getElementById('userName').value;
-    statusMessage.textContent = 'usernName data...';
+    if (!userName) {
+        statusMessage.textContent = 'Error: User name is missing.';
+        return;
+    }
+    statusMessage.textContent = 'User name received...';
 
+    if (!audioData.files || audioData.files.length === 0) {
+        statusMessage.textContent = 'Error: No audio data found.';
+        return;
+    }
     const audioBlob = audioData.files[0];
-    statusMessage.textContent = 'audioBlob data...';
+    statusMessage.textContent = 'Audio data retrieved...';
 
     const reader = new FileReader();
-    statusMessage.textContent = 'reader data...';
-
-
-    // Set up the onloadend event handler
     reader.onloadend = function() {
-        // Data is ready, send it to Firebase
         sendAudioData(reader.result, userName);
     };
-
-    // Start reading the audio data
     reader.readAsDataURL(audioBlob);
-    statusMessage.textContent = 'read data...';
-
-    sendAudioData(reader.result, userName);
-    statusMessage.textContent = 'sent data...';
-
 });
 
 function sendAudioData(base64Audio, userName) {
