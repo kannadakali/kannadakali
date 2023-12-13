@@ -11,14 +11,17 @@ document.addEventListener("DOMContentLoaded", function () {
     document.getElementById('quizContainer').innerHTML = quizQuestions;
 
     // Audio recording setup
+
     let mediaRecorder;
     let audioChunks = [];
     const recordButton = document.getElementById('recordButton');
     const audioPlayback = document.getElementById('audioPlayback');
-    const audioData = document.getElementById('audioData');
+    const audioData = document.createElement('input'); // Create an input element for audio data
+    audioData.type = 'file';
+    audioData.id = 'audioData';
+    document.body.appendChild(audioData); // Append it to the body (or another appropriate element)
 
     recordButton.addEventListener('click', function () {
-      statusMessage.textContent = 'Attempting to record...';
         if (!mediaRecorder || mediaRecorder.state === 'inactive') {
             navigator.mediaDevices.getUserMedia({ audio: true })
                 .then(stream => {
@@ -31,8 +34,11 @@ document.addEventListener("DOMContentLoaded", function () {
                         audioPlayback.hidden = false;
                         audioChunks = [];
 
-                        // Prepare the audio file for upload
-                        audioData.files = [new File([audioBlob], "audio-recording.mp3", { type: 'audio/mp3' })];
+                        // Update to create a File object and assign it to audioData element
+                        const audioFile = new File([audioBlob], "audio-recording.mp3", { type: 'audio/mp3' });
+                        const dataTransfer = new DataTransfer();
+                        dataTransfer.items.add(audioFile);
+                        audioData.files = dataTransfer.files;
                     };
                     mediaRecorder.start();
                     recordButton.textContent = 'Stop Recording';
@@ -42,13 +48,13 @@ document.addEventListener("DOMContentLoaded", function () {
             recordButton.textContent = 'Start Recording';
         }
     });
-// Form submission logic
-const quizForm = document.getElementById('quizForm');
-const statusMessage = document.getElementById('statusMessage');
 
-quizForm.addEventListener('submit', function (e) {
-    e.preventDefault();
-    statusMessage.textContent = 'Form submission initiated...';
+    const quizForm = document.getElementById('quizForm');
+    const statusMessage = document.getElementById('statusMessage');
+
+    quizForm.addEventListener('submit', function (e) {
+        e.preventDefault();
+        statusMessage.textContent = 'Form submission initiated...';
 
     const userName = document.getElementById('userName').value;
     if (!userName) {
