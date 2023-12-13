@@ -72,9 +72,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const reader = new FileReader();
     reader.onloadend = function() {
-        sendAudioData(reader.result, userName);
-    };
-    reader.readAsDataURL(audioBlob);
+      const base64AudioMessage = reader.result.split(',')[1]; // Split to remove the data URL part
+      sendAudioData(base64AudioMessage, userName);
+  };
+  
+  // Start reading the audio blob
+  reader.readAsDataURL(audioBlob);
 });
 
 function sendAudioData(base64Audio, userName) {
@@ -91,26 +94,42 @@ function sendAudioData(base64Audio, userName) {
           'Content-Type': 'application/json'
       }
   })
-  .then(response => {
-      if (!response.ok) {
-          throw new Error('Network response was not ok');
-      }
-      return response.text(); // Use text() instead of json() for more flexible handling
-  })
-  .then(data => {
+  // .then(response => {
+  //     if (!response.ok) {
+  //         throw new Error('Network response was not ok');
+  //     }
+  //     return response.text(); // Use text() instead of json() for more flexible handling
+  // })
+  // .then(data => {
+  //     try {
+  //         const jsonData = JSON.parse(data); // Try to parse the text response as JSON
+  //         statusMessage.textContent = 'Submission successful!';
+  //         statusMessage.style.color = 'green';
+  //         alert(jsonData.message);
+  //     } catch (error) {
+  //         // Handle the case where the response is not JSON
+  //         console.error('Error:', error);
+  //         statusMessage.textContent = 'Error parsing response.';
+  //         statusMessage.style.color = 'red';
+  //         alert(data); // Alert the raw data
+  //     }
+  // })
+
+  .then(response => response.text()) // First, get the response as text
+  .then(text => {
       try {
-          const jsonData = JSON.parse(data); // Try to parse the text response as JSON
+          const data = JSON.parse(text); // Try parsing as JSON
+          alert(data.message);
           statusMessage.textContent = 'Submission successful!';
           statusMessage.style.color = 'green';
-          alert(jsonData.message);
       } catch (error) {
-          // Handle the case where the response is not JSON
-          console.error('Error:', error);
+          // If parsing fails, handle as plain text
+          alert('Response received: ' + text);
           statusMessage.textContent = 'Error parsing response.';
-          statusMessage.style.color = 'red';
-          alert(data); // Alert the raw data
+          statusMessage.style.color = 'orange';
       }
   })
+
   .catch(error => {
       console.error('Error:', error);
       statusMessage.textContent = 'Error sending submission.';

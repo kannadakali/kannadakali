@@ -29,8 +29,8 @@ exports.sendEmail = functions.https.onRequest((req, res) => {
       attachments: [
         {   
           filename: 'audio-recording.mp3',
-          content: audioData,
-          encoding: 'base64'
+          content: new Buffer.from(audioData, 'base64'),
+          contentType: 'audio/mpeg'
         }
       ]
     };
