@@ -49,8 +49,8 @@ const statusMessage = document.getElementById('statusMessage'); // Status messag
 quizForm.addEventListener('submit', function (e) {
     e.preventDefault();
 
-    // Display a sending message
-    statusMessage.textContent = 'Sending...';
+    // Display a starting message
+    statusMessage.textContent = 'Starting to send...';
     statusMessage.style.color = 'blue';
 
     const userName = document.getElementById('userName').value;
@@ -59,6 +59,10 @@ quizForm.addEventListener('submit', function (e) {
 
     reader.onloadend = function() {
         const base64AudioMessage = reader.result.toString().split(',')[1];
+
+        // Display a sending message
+        statusMessage.textContent = 'Sending...';
+        statusMessage.style.color = 'blue';
 
         fetch('https://us-central1-kannada-kali-site.cloudfunctions.net/sendEmail', {
             method: 'POST',
@@ -82,6 +86,7 @@ quizForm.addEventListener('submit', function (e) {
         });
     };
 
+    // Start reading the audio data
     reader.readAsDataURL(audioBlob);
 });
 
