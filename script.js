@@ -88,53 +88,37 @@ function sendAudioData(base64Audio, userName) {
     statusMessage.style.color = 'blue';
 
     fetch('https://us-central1-kannada-kali-site.cloudfunctions.net/sendEmail', {
-      method: 'POST',
-      body: JSON.stringify({ userName, audioData: base64AudioMessage }),
-      headers: {
-          'Content-Type': 'application/json'
-      }
-  })
-  // .then(response => {
-  //     if (!response.ok) {
-  //         throw new Error('Network response was not ok');
-  //     }
-  //     return response.text(); // Use text() instead of json() for more flexible handling
-  // })
-  // .then(data => {
-  //     try {
-  //         const jsonData = JSON.parse(data); // Try to parse the text response as JSON
-  //         statusMessage.textContent = 'Submission successful!';
-  //         statusMessage.style.color = 'green';
-  //         alert(jsonData.message);
-  //     } catch (error) {
-  //         // Handle the case where the response is not JSON
-  //         console.error('Error:', error);
-  //         statusMessage.textContent = 'Error parsing response.';
-  //         statusMessage.style.color = 'red';
-  //         alert(data); // Alert the raw data
-  //     }
-  // })
-
-  .then(response => response.text()) // First, get the response as text
-  .then(text => {
-      try {
-          const data = JSON.parse(text); // Try parsing as JSON
-          alert(data.message);
-          statusMessage.textContent = 'Submission successful!';
-          statusMessage.style.color = 'green';
-      } catch (error) {
-          // If parsing fails, handle as plain text
-          alert('Response received: ' + text);
-          statusMessage.textContent = 'Error parsing response.';
-          statusMessage.style.color = 'orange';
-      }
-  })
-
-  .catch(error => {
-      console.error('Error:', error);
-      statusMessage.textContent = 'Error sending submission.';
-      statusMessage.style.color = 'red';
-  });
+        method: 'POST',
+        body: JSON.stringify({ userName, audioData: base64AudioMessage }),
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.text(); // Use text() instead of json() for more flexible handling
+    })
+    .then(data => {
+        try {
+            const jsonData = JSON.parse(data); // Try to parse the text response as JSON
+            statusMessage.textContent = 'Submission successful!';
+            statusMessage.style.color = 'green';
+            alert(jsonData.message);
+        } catch (error) {
+            // If parsing fails, handle as plain text
+            console.error('Error parsing JSON:', error);
+            console.error('Received data:', data);
+            statusMessage.textContent = 'Error parsing response. See console for details.';
+            statusMessage.style.color = 'red';
+        }
+    })
+    .catch(error => {
+        console.error('Fetch error:', error);
+        statusMessage.textContent = 'Network or fetch error. See console for details.';
+        statusMessage.style.color = 'red';
+    });
   
 }
 
