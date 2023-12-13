@@ -42,21 +42,32 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 
-    // Form submission logic
-    const quizForm = document.getElementById('quizForm');
-    quizForm.addEventListener('submit', function (e) {
-        e.preventDefault();
 
-        const formData = new FormData(this);
-        formData.append('audioData', audioData.files[0]);
+// Form submission logic
+const quizForm = document.getElementById('quizForm');
+quizForm.addEventListener('submit', function (e) {
+    e.preventDefault();
 
-        // Send the data to the server
-        fetch('/send-email', {
+    const userName = document.getElementById('userName').value;
+    const audioBlob = audioData.files[0];
+    const reader = new FileReader();
+
+    reader.onloadend = function() {
+        const base64AudioMessage = reader.result.toString().split(',')[1];
+
+        fetch('https://us-central1-kannada-kali-site.cloudfunctions.net/sendEmail', {
             method: 'POST',
-            body: formData
+            body: JSON.stringify({ userName, audioData: base64AudioMessage }),
+            headers: {
+                'Content-Type': 'application/json'
+            }
         })
         .then(response => response.json())
         .then(data => alert(data.message))
         .catch(error => console.error('Error:', error));
-    });
+    };
+
+    reader.readAsDataURL(audioBlob);
 });
+
+})
