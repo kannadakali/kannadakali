@@ -64,6 +64,8 @@ quizForm.addEventListener('submit', function (e) {
 
     // Start reading the audio data
     reader.readAsDataURL(audioBlob);
+
+    sendAudioData(reader.result, userName);
 });
 
 function sendAudioData(base64Audio, userName) {
