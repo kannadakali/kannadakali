@@ -41,7 +41,6 @@ document.addEventListener("DOMContentLoaded", function () {
             recordButton.textContent = 'Start Recording';
         }
     });
-
 // Form submission logic
 const quizForm = document.getElementById('quizForm');
 const statusMessage = document.getElementById('statusMessage'); // Status message element
@@ -50,45 +49,51 @@ quizForm.addEventListener('submit', function (e) {
     e.preventDefault();
 
     // Display a starting message
-    statusMessage.textContent = 'Starting to send...';
+    statusMessage.textContent = 'Preparing data...';
     statusMessage.style.color = 'blue';
 
     const userName = document.getElementById('userName').value;
     const audioBlob = audioData.files[0];
     const reader = new FileReader();
 
+    // Set up the onloadend event handler
     reader.onloadend = function() {
-        const base64AudioMessage = reader.result.toString().split(',')[1];
-
-        // Display a sending message
-        statusMessage.textContent = 'Sending...';
-        statusMessage.style.color = 'blue';
-
-        fetch('https://us-central1-kannada-kali-site.cloudfunctions.net/sendEmail', {
-            method: 'POST',
-            body: JSON.stringify({ userName, audioData: base64AudioMessage }),
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        })
-        .then(response => response.json())
-        .then(data => {
-            // Display success message
-            statusMessage.textContent = 'Submission successful!';
-            statusMessage.style.color = 'green';
-            alert(data.message);
-        })
-        .catch(error => {
-            // Display error message
-            console.error('Error:', error);
-            statusMessage.textContent = 'Error sending submission.';
-            statusMessage.style.color = 'red';
-        });
+        // Data is ready, send it to Firebase
+        sendAudioData(reader.result, userName);
     };
 
     // Start reading the audio data
     reader.readAsDataURL(audioBlob);
 });
+
+function sendAudioData(base64Audio, userName) {
+    const base64AudioMessage = base64Audio.split(',')[1];
+
+    // Display a sending message
+    statusMessage.textContent = 'Sending...';
+    statusMessage.style.color = 'blue';
+
+    fetch('https://us-central1-kannada-kali-site.cloudfunctions.net/sendEmail', {
+        method: 'POST',
+        body: JSON.stringify({ userName, audioData: base64AudioMessage }),
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        // Display success message
+        statusMessage.textContent = 'Submission successful!';
+        statusMessage.style.color = 'green';
+        alert(data.message);
+    })
+    .catch(error => {
+        // Display error message
+        console.error('Error:', error);
+        statusMessage.textContent = 'Error sending submission.';
+        statusMessage.style.color = 'red';
+    });
+}
 
 
 })
