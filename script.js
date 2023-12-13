@@ -42,11 +42,16 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 
-
 // Form submission logic
 const quizForm = document.getElementById('quizForm');
+const statusMessage = document.getElementById('statusMessage'); // Status message element
+
 quizForm.addEventListener('submit', function (e) {
     e.preventDefault();
+
+    // Display a sending message
+    statusMessage.textContent = 'Sending...';
+    statusMessage.style.color = 'blue';
 
     const userName = document.getElementById('userName').value;
     const audioBlob = audioData.files[0];
@@ -63,11 +68,22 @@ quizForm.addEventListener('submit', function (e) {
             }
         })
         .then(response => response.json())
-        .then(data => alert(data.message))
-        .catch(error => console.error('Error:', error));
+        .then(data => {
+            // Display success message
+            statusMessage.textContent = 'Submission successful!';
+            statusMessage.style.color = 'green';
+            alert(data.message);
+        })
+        .catch(error => {
+            // Display error message
+            console.error('Error:', error);
+            statusMessage.textContent = 'Error sending submission.';
+            statusMessage.style.color = 'red';
+        });
     };
 
     reader.readAsDataURL(audioBlob);
 });
+
 
 })
