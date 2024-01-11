@@ -1,3 +1,8 @@
+// In your auth.js file
+import firebase from 'https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js';
+import 'https://www.gstatic.com/firebasejs/9.0.0/firebase-auth.js';
+import 'https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore.js';
+
 const firebaseConfig = {
     apiKey: "AIzaSyCibChK0khiAsbuYn1XS_fJgjRVpVHoIe4",
     authDomain: "kannada-kali-site.firebaseapp.com",
