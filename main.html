@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Main Application</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>ಕಥೆಯನ್ನು ಓದಿ ಮತ್ತು ಪ್ರಶ್ನೆಗಳನ್ನು ಉತ್ತರಿಸಿ</h1>
+        
+    </header>
+    <main>
+        <section id="storySection">
+            <h2>Story</h2>
+            <p id="storyContent"></p>
+        </section>
+
+        <section id="quizSection">
+            <h2>Quiz</h2>
+            <form id="quizForm">
+                <div id="quizContainer"></div>
+                <label for="userName">Name:</label>
+                <input type="text" id="userName" name="userName" required>
+
+                <label for="audioRecord">Record your answer:</label>
+                <button type="button" id="recordButton">Begin Recording</button>
+                <audio id="audioPlayback" controls hidden></audio>
+                <input type="hidden" id="audioData" name="audioData">
+
+                <button type="submit">Submit</button>
+            </form>
+            <div id="quizResult"></div>
+            <div id="statusMessage"></div>
+        </section>
+    </main>
+    <footer>
+        <p>&copy; 2023 Interactive Quiz</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>

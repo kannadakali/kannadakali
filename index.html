@@ -2,43 +2,34 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Interactive Quiz</title>
+    <title>Login/Register</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <header>
-        <h1>ಕಥೆಯನ್ನು ಓದಿ ಮತ್ತು ಪ್ರಶ್ನೆಗಳನ್ನು ಉತ್ತರಿಸಿ</h1>
-        
-    </header>
-    <main>
-        <section id="storySection">
-            <h2>Story</h2>
-            <p id="storyContent"></p>
-        </section>
+    <div id="loginDiv">
+        <h2>Login</h2>
+        <form id="loginForm">
+            <input type="text" id="loginUsername" placeholder="Username">
+            <input type="password" id="loginPassword" placeholder="Password">
+            <button type="submit">Login</button>
+        </form>
+        <button onclick="showRegister()">Register</button>
+    </div>
 
-        <section id="quizSection">
-            <h2>Quiz</h2>
-            <form id="quizForm">
-                <div id="quizContainer"></div>
-                <label for="userName">Name:</label>
-                <input type="text" id="userName" name="userName" required>
+    <div id="registerDiv" style="display:none;">
+        <h2>Register</h2>
+        <form id="registerForm">
+            <input type="text" id="registerUsername" placeholder="Username">
+            <input type="text" id="fullName" placeholder="Full Name">
+            <input type="password" id="registerPassword" placeholder="Password">
+            <button type="submit">Create Account</button>
+        </form>
+        <button onclick="showLogin()">Login</button>
+    </div>
 
-                <label for="audioRecord">Record your answer:</label>
-                <button type="button" id="recordButton">Begin Recording</button>
-                <audio id="audioPlayback" controls hidden></audio>
-                <input type="hidden" id="audioData" name="audioData">
-
-                <button type="submit">Submit</button>
-            </form>
-            <div id="quizResult"></div>
-            <div id="statusMessage"></div>
-        </section>
-    </main>
-    <footer>
-        <p>&copy; 2023 Interactive Quiz</p>
-    </footer>
-
-    <script src="script.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore.js"></script>
+    <script src="auth.js"></script>
 </body>
 </html>
