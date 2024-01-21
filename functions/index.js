@@ -2,6 +2,7 @@ const functions = require('firebase-functions');
 const nodemailer = require('nodemailer');
 const admin = require('firebase-admin');
 const cors = require('cors')({origin: 'https://kannadakali.github.io'});
+//THIS IS THE ISSUE!!! PUSH TO GIT/FIREBASE?!?!?!?!
 
 admin.initializeApp();
 
